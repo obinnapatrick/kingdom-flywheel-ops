@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv, io, json, os, re, time, urllib.request, zipfile
+import csv, io, json, os, re, time, urllib.error, urllib.request, zipfile
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -9,13 +9,13 @@ OUT = Path("out")
 OUT.mkdir(exist_ok=True)
 INGEST_URL = os.environ.get("INGEST_URL","").strip()
 OIDC_TOKEN = os.environ.get("OIDC_TOKEN","").strip()
-BATCH_SIZE = 250
+OIDC_OBTAINED_AT = time.monotonic() if OIDC_TOKEN else 0.0
+BATCH_SIZE = 500
 
 PREFIXES = {
     "71200":"PRIORITY","43210":"PRIORITY","43220":"PRIORITY","43290":"ALLOW",
     "33120":"PRIORITY","33140":"PRIORITY","33190":"ALLOW","80200":"PRIORITY",
     "81100":"PRIORITY","62020":"REVIEW","62030":"PRIORITY","62090":"REVIEW",
-    "46":"REVIEW",
 }
 MIN_AGE_YEARS = 5
 
