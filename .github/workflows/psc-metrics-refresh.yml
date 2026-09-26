@@ -1,0 +1,45 @@
+name: Companies House PSC metrics refresh
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "acquisition-os/refresh_psc_metrics.py"
+      - ".github/workflows/psc-metrics-refresh.yml"
+
+concurrency:
+  group: companies-house-psc-metrics
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  refresh-psc-metrics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Request short-lived GitHub OIDC token
+        shell: bash
+        run: |
+          RESPONSE="$(curl --fail --silent --show-error -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=acq-os-supabase")"
+          echo "::add-mask::$(echo "$RESPONSE" | jq -r .value)"
+          echo "OIDC_TOKEN=$(echo "$RESPONSE" | jq -r .value)" >> "$GITHUB_ENV"
+      - name: Refresh PSC company metrics for DEEPEN queue
+        env:
+          INGEST_URL: "https://nydyipplixpytqfpoomc.supabase.co/functions/v1/ch-universe-ingest"
+        run: python acquisition-os/refresh_psc_metrics.py
+      - name: Show summary
+        run: cat out/psc_metrics_summary.json
+      - name: Upload audit summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: companies-house-psc-metrics-summary
+          path: out/psc_metrics_summary.json
+          retention-days: 7
