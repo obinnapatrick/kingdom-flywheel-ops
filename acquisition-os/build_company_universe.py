@@ -209,7 +209,35 @@ def main():
             print(f"[{idx}/{len(parts)}] seen={seen:,} kept={kept:,} uploaded={counts['uploaded']:,}",flush=True)
 
     flush_batch()
-    final=post_json({"action":"finalize","ingest_run_id":ingest_run_id})
+
+    # Promotion is deliberately chunked. A single 200k-row promote can exceed
+    # hosted PostgREST statement timeouts even when the underlying SQL is valid.
+    cursor=None
+    promoted=inserted=updated=0
+    while True:
+        response=post_json({
+            "action":"promote",
+            "ingest_run_id":ingest_run_id,
+            "after_company_number":cursor,
+            "limit":5000,
+        })
+        result=response.get("result") or {}
+        if result.get("done"):
+            break
+        processed=int(result.get("processed",0))
+        if processed <= 0:
+            raise RuntimeError(f"Promotion stalled at cursor={cursor!r}: {response}")
+        promoted += processed
+        inserted += int(result.get("inserted",0))
+        updated += int(result.get("updated",0))
+        cursor=result.get("next_cursor")
+        print(f"promoted={promoted:,} inserted={inserted:,} updated={updated:,} cursor={cursor}",flush=True)
+
+    final=post_json({"action":"complete","ingest_run_id":ingest_run_id})
+    counts["promoted"]=promoted
+    counts["new_targets"]=inserted
+    counts["refreshed_targets"]=updated
+
     summary={
         "snapshot_date":snapshot,
         "generated_at_utc":datetime.utcnow().isoformat()+"Z",
@@ -219,7 +247,7 @@ def main():
         "counts":dict(counts),
         "parts":part_counts,
         "top_sic_codes":sic_counts.most_common(50),
-        "supabase_finalize":final,
+        "supabase_complete":final,
         "output_file":str(out_csv),
     }
     (OUT/"summary.json").write_text(json.dumps(summary,indent=2),encoding="utf-8")
