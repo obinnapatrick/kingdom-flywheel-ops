@@ -1,0 +1,45 @@
+name: Companies House basic metadata refresh
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "acquisition-os/refresh_basic_metadata.py"
+      - ".github/workflows/basic-metadata-refresh.yml"
+
+concurrency:
+  group: companies-house-basic-metadata
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  refresh-basic-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Request short-lived GitHub OIDC token
+        shell: bash
+        run: |
+          RESPONSE="$(curl --fail --silent --show-error -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=acq-os-supabase")"
+          echo "::add-mask::$(echo "$RESPONSE" | jq -r .value)"
+          echo "OIDC_TOKEN=$(echo "$RESPONSE" | jq -r .value)" >> "$GITHUB_ENV"
+      - name: Refresh accounts metadata for Tier A/B
+        env:
+          INGEST_URL: "https://nydyipplixpytqfpoomc.supabase.co/functions/v1/ch-universe-ingest"
+        run: python acquisition-os/refresh_basic_metadata.py
+      - name: Show summary
+        run: cat out/basic_metadata_summary.json
+      - name: Upload audit summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: companies-house-basic-metadata-summary
+          path: out/basic_metadata_summary.json
+          retention-days: 7
