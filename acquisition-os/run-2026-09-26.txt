@@ -1,1 +1,2 @@
 Trigger Companies House acquisition universe run on 2026-09-26.
+Synchronize trigger.
