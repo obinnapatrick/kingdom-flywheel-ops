@@ -44,16 +44,38 @@ def post_json(payload):
         if r.status < 200 or r.status >= 300: raise RuntimeError(body)
         return json.loads(body)
 
+def month_candidates(months_back=6):
+    today = datetime.utcnow().date()
+    y, m = today.year, today.month
+    out = []
+    for _ in range(months_back):
+        out.append(f"{y:04d}-{m:02d}-01")
+        m -= 1
+        if m == 0:
+            m = 12
+            y -= 1
+    return out
+
+def url_exists(url):
+    req = urllib.request.Request(
+        url,
+        method="HEAD",
+        headers={"User-Agent":"KingdomFlywheelAcquisitionOS/1.0"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return 200 <= r.status < 400
+    except Exception:
+        return False
+
 def latest_parts():
-    html = get(INDEX)
-    pat = re.compile(r'BasicCompanyData-(\d{4}-\d{2}-\d{2})-part(\d+)_(\d+)\.zip')
-    hits = [(m.group(1), int(m.group(2)), int(m.group(3)), m.group(0)) for m in pat.finditer(html)]
-    if not hits: raise RuntimeError("Could not discover Companies House split snapshot files")
-    latest = max(x[0] for x in hits)
-    parts = sorted({(p,n,f) for d,p,n,f in hits if d == latest})
-    expected = max(n for p,n,f in parts)
-    if len(parts) != expected: raise RuntimeError(f"Expected {expected} parts for {latest}, discovered {len(parts)}")
-    return latest, [f for _,_,f in parts]
+    # Probe Companies House's stable one-file monthly naming convention.
+    # This avoids scraping the human-facing HTML index.
+    for snapshot in month_candidates():
+        filename = f"BasicCompanyDataAsOneFile-{snapshot}.zip"
+        if url_exists(INDEX + filename):
+            return snapshot, [filename]
+    raise RuntimeError("Could not locate a current Companies House monthly snapshot")
 
 def parse_date(s):
     s=(s or "").strip()
