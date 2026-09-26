@@ -7,6 +7,10 @@ on:
     paths:
       - "acquisition-os/**"
       - ".github/workflows/companies-house-universe.yml"
+  pull_request:
+    paths:
+      - "acquisition-os/**"
+      - ".github/workflows/companies-house-universe.yml"
 
 permissions:
   contents: read
