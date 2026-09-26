@@ -8,7 +8,9 @@ INDEX = "https://download.companieshouse.gov.uk/"
 OUT = Path("out")
 OUT.mkdir(exist_ok=True)
 INGEST_URL = os.environ.get("INGEST_URL","").strip()
-OIDC_TOKEN = os.environ.get("OIDC_TOKEN","").strip()\nOIDC_OBTAINED_AT = time.monotonic() if OIDC_TOKEN else 0.0\nBATCH_SIZE = 500
+OIDC_TOKEN = os.environ.get("OIDC_TOKEN","").strip()
+OIDC_OBTAINED_AT = time.monotonic() if OIDC_TOKEN else 0.0
+BATCH_SIZE = 500
 
 PREFIXES = {
     "71200":"PRIORITY","43210":"PRIORITY","43220":"PRIORITY","43290":"ALLOW",
