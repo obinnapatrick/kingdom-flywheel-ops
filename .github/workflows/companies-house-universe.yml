@@ -1,0 +1,35 @@
+name: Companies House acquisition universe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "acquisition-os/**"
+      - ".github/workflows/companies-house-universe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-universe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Stream-filter latest Companies House snapshot
+        run: python acquisition-os/build_company_universe.py
+      - name: Show summary
+        run: cat out/summary.json
+      - name: Upload filtered universe
+        uses: actions/upload-artifact@v4
+        with:
+          name: companies-house-acquisition-universe
+          path: |
+            out/companies_house_candidates_*.csv
+            out/summary.json
+          compression-level: 6
+          retention-days: 7
