@@ -1,3 +1,4 @@
 Trigger Companies House acquisition universe run on 2026-09-26.
 Synchronize trigger.
 OIDC ingestion trigger.
+Snapshot discovery fix trigger.
