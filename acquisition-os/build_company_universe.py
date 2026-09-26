@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv, io, json, os, re, urllib.request, zipfile
+import csv, io, json, os, re, time, urllib.request, zipfile
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -31,18 +31,42 @@ def get(url, target=None):
             return None
         return r.read().decode("utf-8", errors="replace")
 
+def oidc_token():
+    global OIDC_TOKEN, OIDC_OBTAINED_AT
+    request_url=os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL","").strip()
+    request_token=os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN","").strip()
+    if request_url and request_token and (not OIDC_TOKEN or time.monotonic()-OIDC_OBTAINED_AT > 180):
+        sep="&" if "?" in request_url else "?"
+        req=urllib.request.Request(
+            request_url + sep + "audience=acq-os-supabase",
+            headers={"Authorization":f"bearer {request_token}","User-Agent":"KingdomFlywheelAcquisitionOS/1.0"}
+        )
+        with urllib.request.urlopen(req,timeout=60) as r:
+            OIDC_TOKEN=json.loads(r.read().decode())["value"]
+            OIDC_OBTAINED_AT=time.monotonic()
+    if not OIDC_TOKEN:
+        raise RuntimeError("GitHub OIDC token unavailable")
+    return OIDC_TOKEN
+
 def post_json(payload):
-    if not INGEST_URL or not OIDC_TOKEN:
-        raise RuntimeError("INGEST_URL/OIDC_TOKEN missing")
+    if not INGEST_URL:
+        raise RuntimeError("INGEST_URL missing")
     data=json.dumps(payload,separators=(",",":")).encode()
-    req=urllib.request.Request(
-        INGEST_URL,data=data,method="POST",
-        headers={"Authorization":f"Bearer {OIDC_TOKEN}","Content-Type":"application/json","User-Agent":"KingdomFlywheelAcquisitionOS/1.0"}
-    )
-    with urllib.request.urlopen(req,timeout=120) as r:
-        body=r.read().decode()
-        if r.status < 200 or r.status >= 300: raise RuntimeError(body)
-        return json.loads(body)
+    for attempt in range(2):
+        token=oidc_token()
+        req=urllib.request.Request(
+            INGEST_URL,data=data,method="POST",
+            headers={"Authorization":f"Bearer {token}","Content-Type":"application/json","User-Agent":"KingdomFlywheelAcquisitionOS/1.0"}
+        )
+        try:
+            with urllib.request.urlopen(req,timeout=120) as r:
+                return json.loads(r.read().decode())
+        except urllib.error.HTTPError as e:
+            detail=e.read().decode(errors="replace")
+            if e.code == 401 and attempt == 0:
+                globals()["OIDC_TOKEN"]=""
+                continue
+            raise RuntimeError(f"Ingest HTTP {e.code}: {detail[:1000]}") from e
 
 def month_candidates(months_back=6):
     today = datetime.utcnow().date()
@@ -117,7 +141,11 @@ def main():
         nonlocal batch
         if not batch: return
         result=post_json({"action":"batch","ingest_run_id":ingest_run_id,"rows":batch})
-        counts["uploaded"] += int(result.get("accepted",0))
+        accepted=int(result.get("accepted",0))
+        if accepted <= 0:
+            sample=[r.get("company_number") for r in batch[:5]]
+            raise RuntimeError(f"Supabase accepted zero rows from non-empty batch; sample company numbers={sample}")
+        counts["uploaded"] += accepted
         batch=[]
 
     fields=["company_number","company_name","company_status","company_type","incorporation_date",
@@ -133,7 +161,11 @@ def main():
                 names=[n for n in zf.namelist() if n.lower().endswith(".csv")]
                 if not names: raise RuntimeError(f"No CSV inside {filename}")
                 with zf.open(names[0]) as raw, io.TextIOWrapper(raw,encoding="utf-8-sig",errors="replace",newline="") as text:
-                    for row in csv.DictReader(text):
+                    reader=csv.DictReader(text)
+                    # Companies House CSV headers have historically included leading spaces
+                    # on fields such as " CompanyNumber". Normalize every header once.
+                    reader.fieldnames=[(h or "").strip() for h in (reader.fieldnames or [])]
+                    for row in reader:
                         seen+=1; counts["rows_seen"]+=1
                         status=(row.get("CompanyStatus") or "").strip()
                         if status.lower()!="active":
@@ -147,8 +179,12 @@ def main():
                             counts["reject_sector"]+=1; continue
                         for c in codes: sic_counts[c]+=1
                         kept+=1; counts["kept"]+=1; counts[f"kept_{disp.lower()}"]+=1
+                        company_number=(row.get("CompanyNumber") or "").strip()
+                        if not company_number:
+                            counts["reject_blank_company_number"]+=1
+                            continue
                         record={
-                            "company_number":(row.get("CompanyNumber") or "").strip(),
+                            "company_number":company_number,
                             "company_name":(row.get("CompanyName") or "").strip(),
                             "company_status":status,
                             "company_type":(row.get("CompanyCategory") or "").strip(),
