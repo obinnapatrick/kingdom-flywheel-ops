@@ -2,15 +2,10 @@ name: Companies House acquisition universe
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "acquisition-os/**"
-      - ".github/workflows/companies-house-universe.yml"
-  pull_request:
-    paths:
-      - "acquisition-os/**"
-      - ".github/workflows/companies-house-universe.yml"
+
+concurrency:
+  group: companies-house-acquisition-universe
+  cancel-in-progress: true
 
 permissions:
   contents: read
