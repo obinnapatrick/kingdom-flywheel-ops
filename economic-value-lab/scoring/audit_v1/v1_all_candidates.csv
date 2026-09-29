@@ -1,0 +1,30 @@
+id,name,group,SEV,FREQ,MEAS,ACC,TTP,SOLV,REP,URG,IMPL,RISK,SAT,COMP,AIL,PIND,LEARN,MOAT
+C01,UK SME late payment,LEAK,4,5,5,4,4,1,5,3,5,4,1,2,2,5,2,1
+C02,Retailer deductions,LEAK,4,5,5,3,4,4,5,4,4,4,1,4,4,4,4,2
+C03,Manufacturing downtime,OTHER,5,4,3,1,1,3,4,4,1,3,2,5,4,3,5,4
+C04,NHS outpatient DNAs,OTHER,4,5,4,1,2,3,3,3,3,2,1,3,3,4,3,2
+C05,US prior authorisation,OTHER,4,5,4,1,2,2,4,4,2,1,2,3,5,2,3,3
+C06,US claim denials,LEAK,5,5,5,1,3,4,5,5,3,2,1,4,4,3,4,2
+C07,Truck detention,OTHER,4,5,3,2,3,1,4,1,3,4,3,3,2,5,3,2
+C08,Construction rework,OTHER,5,4,1,3,1,2,5,3,3,3,3,4,3,4,5,3
+C09,Contract value leakage,OTHER,3,3,1,1,2,3,4,2,3,3,2,3,3,4,3,2
+C10,Law-firm lock-up,OTHER,2,4,5,3,4,3,4,3,4,4,1,2,3,4,2,1
+C11,Construction retentions,LEAK,3,2,5,3,4,2,4,4,4,3,3,2,1,5,2,1
+C12,Planning invalidation,OTHER,2,4,4,4,4,3,4,2,4,4,3,4,3,4,3,3
+C13,Involuntary churn,LEAK,3,5,5,3,5,4,5,4,4,5,0,2,2,5,2,0
+C14,AP overpayment recovery,LEAK,2,4,5,2,4,4,5,3,4,3,2,3,3,4,4,2
+C15,SME public tenders,OTHER,3,3,1,4,1,2,5,3,4,4,1,3,4,3,3,2
+C16,Hospitality food waste,OTHER,2,5,4,4,4,3,5,2,3,4,2,3,3,4,3,2
+C17,Missed calls trades,OTHER,2,5,3,4,5,3,5,3,4,4,0,1,4,2,2,0
+C18,Insurance claims leakage,LEAK,5,5,3,1,2,3,3,4,3,2,2,4,4,3,4,3
+C19,Social housing voids/repairs,OTHER,2,4,3,2,2,3,3,3,3,1,3,3,3,4,3,2
+C20,Carrier invoice/SLA refunds,LEAK,2,5,5,3,5,4,4,3,4,4,2,3,2,5,3,2
+C21,Retail returns fraud,LEAK,4,5,3,1,2,3,3,4,2,3,1,3,4,3,3,2
+C22,Energy broker commissions,LEAK,3,1,4,3,2,3,3,3,4,1,3,1,1,5,1,1
+C23,Field-service repeat visits,OTHER,3,5,3,2,2,3,4,3,3,4,1,3,3,4,3,2
+C24,Customs declaration cost,OTHER,3,5,4,2,3,3,4,3,3,2,2,4,4,3,4,3
+C25,Import duty overpayment,LEAK,3,5,5,3,4,4,5,3,4,3,3,5,4,4,5,4
+C26,Out-of-hours electricity,OTHER,3,5,4,4,4,3,5,2,4,4,2,4,3,5,4,3
+C27,Subcontractor recovery,LEAK,4,4,4,3,3,3,5,4,4,3,3,4,3,4,4,3
+C29,Energy billing errors,LEAK,2,4,5,3,4,4,4,2,4,4,2,3,2,5,3,2
+C30,Distributor order entry,OTHER,3,5,4,3,3,4,5,3,3,4,1,3,5,3,3,2

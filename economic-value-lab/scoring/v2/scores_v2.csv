@@ -1,0 +1,57 @@
+id,name,archetype,value_type,access_tier,kill_v2,WSEV,MEAS,TTP,ACC_A,SOLV,URG,IMPL,RISK,SAT,T,K,S,P,I,E,Z,V,A,J,REP,COMP,MOAT,LEARN,ACC_B,confidence
+C01,UK SME late payment,LEAKAGE_RECOVERY,REDIST,A,K16;K6,3,5,4,4,1,3,5,4,1,2,1,2,1,1,1,3,1,2,2,5,2,1,2,5,M
+C02,Retailer deductions (US CPG),LEAKAGE_RECOVERY,REDIST,A,K6,4,5,4,3,4,4,4,4,0,2,3,2,1,3,3,3,2,3,2,5,4,2,3,4,M
+C03,Manufacturing unplanned downtime,MAINTENANCE,PROD,B,,4,3,1,1,3,4,1,3,2,5,5,5,5,5,5,5,5,5,5,4,5,4,5,4,M
+C04,NHS outpatient no-shows,CUSTOMER_FLOW,PROD,B,K6,3,4,2,1,3,3,3,3,1,3,3,3,3,3,3,3,2,3,3,3,3,2,3,3,M
+C05,US prior authorisation,COMPLIANCE_ADMINISTRATION,MIXED,B,K6,4,4,2,0,2,4,2,1,1,3,3,4,3,3,3,4,3,5,3,4,3,2,3,2,M
+C06,US claim denials,LEAKAGE_RECOVERY,REDIST,B,K6,5,5,3,0,4,5,3,2,0,2,3,3,1,3,4,4,3,4,3,5,4,2,3,2,M
+C07,Truck detention (US),WAITING_DELAY,PROD,B,K10;K16,3,3,3,2,1,1,3,4,3,3,3,3,4,2,3,3,2,2,3,4,3,2,3,3,M
+C08,Construction rework,QUALITY_ERRORS,PROD,B,K9,4,1,1,2,2,3,3,3,3,5,5,4,5,4,4,3,4,4,5,5,4,4,5,3,M
+C09,Contract value leakage,PROCUREMENT,REDIST,B,K2,3,1,2,1,3,2,3,3,2,3,3,3,2,3,3,3,2,3,3,4,3,2,3,3,M
+C10,Law-firm billing lock-up,INVENTORY_WORKING_CAPITAL,REDIST,A,K6,2,5,4,3,3,3,4,4,1,2,2,1,2,2,2,3,2,3,2,4,2,1,2,4,M
+C11,Construction retentions (new flow),LEAKAGE_RECOVERY,REDIST,A,K11,3,5,4,3,2,4,4,3,3,1,2,2,1,1,2,2,1,1,2,4,2,1,2,4,M
+C12,Planning application invalidation,COMPLIANCE_ADMINISTRATION,PROD,A,,2,4,4,5,3,2,4,4,3,4,3,3,3,3,4,4,2,4,4,4,4,3,3,4,M
+C13,Involuntary subscription churn,LEAKAGE_RECOVERY,REDIST,A,K6;K18,3,5,5,3,4,4,4,5,0,1,1,1,1,2,1,2,1,2,1,5,2,0,2,4,L
+C14,AP overpayment recovery,LEAKAGE_RECOVERY,REDIST,B,,2,5,4,2,4,3,4,3,2,2,2,2,1,2,2,3,1,3,2,5,3,2,3,4,M
+C15,SME public tenders,KNOWLEDGE_WORK,REDIST,A,K9,3,1,1,4,2,3,4,4,1,3,3,2,2,3,3,3,2,4,3,5,3,2,3,4,M
+C16,Hospitality food waste,QUALITY_ERRORS,PROD,A,K3,2,4,4,4,3,2,3,4,2,3,3,2,4,3,3,3,2,3,3,5,3,2,3,4,M
+C17,Missed calls (trades),CUSTOMER_FLOW,REDIST,A,K6,2,3,5,4,3,3,4,4,0,1,1,1,2,2,1,2,1,3,1,5,1,0,2,4,L
+C18,Insurance claims leakage,LEAKAGE_RECOVERY,REDIST,B,,5,3,2,0,3,4,3,2,2,3,4,3,2,3,4,4,3,4,3,3,4,3,3,3,M
+C19,Social housing voids/repairs,MAINTENANCE,PROD,B,K3,2,3,2,2,3,3,3,1,3,3,3,3,3,3,3,3,2,3,3,3,3,2,3,3,M
+C20,Carrier invoice/SLA refunds,LEAKAGE_RECOVERY,REDIST,A,,2,5,5,4,4,3,4,4,2,1,2,1,1,2,2,3,1,2,1,4,2,1,2,4,L
+C21,Retail returns fraud,LEAKAGE_RECOVERY,REDIST,B,K6,4,3,2,1,3,4,2,3,1,2,3,3,2,3,3,3,3,4,3,3,3,2,3,3,M
+C22,Energy broker commissions,LEAKAGE_RECOVERY,REDIST,A,K11;K14,3,4,2,3,3,3,4,1,3,1,1,1,1,1,1,1,1,1,1,3,1,1,1,4,M
+C23,Field-service repeat visits,MAINTENANCE,PROD,B,K6,3,3,2,2,3,3,3,4,1,3,3,3,4,3,3,3,3,3,3,4,3,2,3,3,L
+C24,Customs declaration production,COMPLIANCE_ADMINISTRATION,PROD,B,,3,4,3,2,3,3,3,2,2,3,4,3,3,3,4,4,3,4,4,4,4,3,4,4,M
+C25,UK import duty overpayment (broad recovery),LEAKAGE_RECOVERY,REDIST,A,,2,5,4,3,3,3,4,3,2,2,3,2,1,2,3,3,1,3,3,3,4,3,4,4,L
+C25b,Trade compliance decision quality under tariff volatility,DECISION_LATENCY,MIXED,B,,3,4,3,3,3,4,3,3,2,5,5,4,3,4,5,4,4,5,5,5,5,4,5,4,L
+C26,Out-of-hours electricity analysis,RESOURCE_ALLOCATION,PROD,A,K6,2,4,4,4,3,2,4,4,0,2,2,2,4,2,2,2,1,2,2,5,2,0,2,4,M
+C27,Subcontractor debt recovery (collection layer),LEAKAGE_RECOVERY,REDIST,A,,3,4,3,3,2,4,4,3,3,2,3,2,1,2,3,3,1,2,3,5,3,2,3,4,M
+C27b,Construction contract administration reliability (pre-dispute),INFORMATION_FLOW,MIXED,A,,4,4,3,3,4,4,4,3,2,4,5,4,4,4,5,5,4,4,5,5,5,4,5,5,M
+C29,Energy billing errors,LEAKAGE_RECOVERY,REDIST,A,,2,5,4,3,4,2,4,4,2,1,2,1,1,2,2,3,1,2,1,4,2,1,2,4,L
+C30,Distributor order entry,INFORMATION_FLOW,PROD,A,,3,4,3,3,4,3,3,4,1,3,2,2,3,3,2,4,3,4,3,5,3,1,3,4,M
+N01,NHS delayed discharge,COORDINATION,PROD,B,,4,3,2,1,3,4,2,2,3,4,5,5,5,4,5,4,4,4,5,4,5,4,5,3,M
+N02,NHS theatre utilisation,SCHEDULING,PROD,B,,4,4,2,1,3,4,3,3,2,4,4,5,5,4,4,4,3,4,4,4,4,3,4,3,M
+N03,HGV empty running,ASSET_UTILISATION,PROD,B,,3,3,3,2,2,3,3,4,1,3,3,3,5,3,3,3,3,4,3,4,3,2,3,3,M
+N04,Grid connection queue,WAITING_DELAY,PROD,C,K11;K16,5,2,1,0,2,5,2,3,3,4,5,5,5,3,4,3,5,4,4,3,4,4,4,2,M
+N05,High-risk building Gateway 2 submission quality,COMPLIANCE_ADMINISTRATION,PROD,B,,4,4,3,3,4,4,4,3,2,4,4,4,4,4,5,4,3,4,5,2,5,4,4,4,M
+N06,SME management practices,WORKFORCE_PRODUCTIVITY,PROD,A,,3,2,1,4,3,2,3,4,3,5,5,5,5,4,4,3,5,4,5,5,5,4,5,5,M
+N07,Social care workforce and homecare scheduling,SCHEDULING,PROD,A,,3,3,3,3,3,3,3,2,2,3,4,4,4,3,4,4,2,4,3,4,4,3,4,4,M
+N08,SME manufacturing throughput (OEE),THROUGHPUT,PROD,B,,4,4,2,2,4,3,3,4,2,5,5,4,5,5,5,4,4,5,5,5,5,4,5,4,M
+N09,Food manufacturing surplus / demand forecasting,FORECASTING,PROD,B,,3,4,2,2,3,3,3,4,3,4,4,3,4,4,4,4,3,4,4,4,4,3,4,4,M
+N10,Medication errors,QUALITY_ERRORS,PROD,B,K13,3,3,2,0,3,3,2,0,2,3,4,5,4,3,4,3,2,4,3,4,4,3,4,2,M
+N11,Customer-service failure demand,CUSTOMER_FLOW,PROD,A,K6,4,3,3,3,3,3,3,4,0,4,3,3,4,3,3,3,3,5,4,5,3,1,3,4,M
+N12,Water network leakage,MAINTENANCE,PROD,B,K6,4,3,1,0,3,4,1,3,1,3,4,4,5,3,4,3,3,4,3,2,4,3,4,2,M
+N13,Children's residential placements,RESOURCE_ALLOCATION,MIXED,B,K16,4,2,1,1,1,4,2,1,3,2,3,4,3,2,3,2,2,2,3,2,3,2,3,2,M
+N14,NHS procurement price variation,PROCUREMENT,REDIST,B,K6,3,4,2,1,3,3,3,3,1,3,3,3,2,3,3,3,2,3,3,3,3,2,3,2,M
+N15,EHCP timeliness,DECISION_LATENCY,PROD,B,K16,3,3,2,1,1,3,3,1,3,2,3,3,3,2,3,2,1,3,2,3,3,2,3,2,M
+N16,NHS waiting-list validation,RESOURCE_ALLOCATION,MIXED,B,K11;K14,3,4,4,1,4,3,3,1,2,2,2,2,2,2,2,2,1,3,2,3,2,1,2,2,M
+N17,Sickness absence,WORKFORCE_PRODUCTIVITY,PROD,A,K9,4,1,1,3,2,3,3,3,2,4,3,4,4,2,3,2,3,3,3,5,3,2,3,4,M
+N18,MRO spare-parts inventory,INVENTORY_WORKING_CAPITAL,PROD,B,,3,4,3,2,4,3,4,4,2,4,4,3,3,4,4,4,3,4,4,4,4,3,4,4,L
+N19,Inventory and working-capital decisions (mid-market),INVENTORY_WORKING_CAPITAL,PROD,A,,4,4,3,3,4,3,4,4,2,5,4,4,4,4,4,4,4,5,5,5,5,3,5,4,M
+N20,Engineering knowledge loss,KNOWLEDGE_WORK,PROD,B,K2;K9,3,1,1,2,2,3,3,4,3,5,5,4,4,2,3,3,3,4,4,4,4,3,4,3,L
+N21,Accountancy practice capacity,KNOWLEDGE_WORK,PROD,A,,3,4,3,4,3,4,4,3,1,3,3,3,4,3,3,4,3,5,3,5,3,2,3,5,L
+N22,Manufacturing quote (RFQ) latency,DECISION_LATENCY,PROD,A,,3,3,3,3,3,3,3,4,2,4,4,3,3,4,4,4,3,4,4,5,4,3,4,4,L
+N23,Retail on-shelf availability,FORECASTING,PROD,B,K6,4,4,2,0,3,4,2,4,1,4,4,3,4,3,4,3,3,4,4,3,4,2,4,2,M
+N24,Business demand flexibility,RESOURCE_ALLOCATION,PROD,A,K3,1,4,3,3,3,1,3,4,2,3,3,4,4,2,3,3,2,3,3,4,3,2,3,4,M
+N25,Court and tribunal backlogs,WAITING_DELAY,PROD,C,K15;access-C,4,3,1,0,2,4,2,2,3,3,4,5,4,2,3,2,1,3,3,2,3,2,3,1,M

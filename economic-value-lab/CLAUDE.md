@@ -73,11 +73,27 @@ Software and AI (including Claude Code) are tools for that purpose. They are nev
 
 ## Operating assumptions (must be re-tested, not silently inherited)
 
-- `ASSUMPTION` The operator is a single independent person with limited capital (order of
+- ~~`ASSUMPTION` The operator is a single independent person with limited capital (order of
   £25k or less available before first evidence of value), no professional licences (legal,
-  medical, financial-services, customs-authorised status) and no privileged industry access.
+  medical, financial-services, customs-authorised status) and no privileged industry access.~~
+  **Withdrawn 2026-09-29 (step 1B):** these constraints were invented, not authorised, and biased
+  the first scan (`selector_audit_v1.md`). Replaced by access tiers A/B/C in `rubric_v2.md`.
 - `ASSUMPTION` The operator is UK-based (inferred from repository context, not stated). This
   affects accessibility scores. If wrong, re-score the ACC dimension for all candidates.
+
+## Amendment 1 (2026-09-29, step 1B)
+
+19. **Audit the selector, not just the candidates.** Every scoring run reports the archetype bias
+    re-audit and the archetype coverage test (`rubric_v2.md`). Weight sensitivity alone cannot
+    detect bias that lives in scoring anchors or in candidate generation.
+20. **Separate the first wedge from the long-term ceiling.** Score both; neither may compensate
+    for failure on the other.
+21. **Recovery is not productivity.** Recovering money from a counterparty is recorded as
+    redistribution and scored as such.
+22. **No accidental consultancy.** A wedge counts only if its deliverable is a measured
+    operational change plus a reusable artefact (rule base, benchmark, dataset), never a report.
+23. **Do not invent constraints.** Any assumption about the operator's resources must be stated as
+    `ASSUMPTION` and confirmed by the user before it can kill a candidate.
 
 ## Phase rules (Phase Zero)
 
@@ -96,4 +112,10 @@ Software and AI (including Claude Code) are tools for that purpose. They are nev
 | `evidence/` | Source register and per-candidate evidence for and against |
 | `scoring/` | Scores, sensitivity script and generated results |
 | `shortlist.md` | Surviving candidates in plain English |
-| `decision_record.md` | What was examined, killed, why, and what remains unknown |
+| `decision_record.md` | DR-001: what was examined, killed, why, and what remains unknown |
+| `selector_audit_v1.md` | Bias audit of the v1 selector (step 1B) |
+| `archetype_coverage_v1.md` | Problem-archetype coverage test |
+| `rubric_v2.md` | Current scoring method (supersedes the rubric for scoring; v1 preserved) |
+| `second_scan_v1.csv` | Second, archetype-driven scan |
+| `candidate_ledger_v2.csv` | All candidates with v1 and v2 status |
+| `decision_record_v2.md` | DR-002: current state |

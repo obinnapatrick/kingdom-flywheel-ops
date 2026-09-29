@@ -1,0 +1,68 @@
+id,name,scan,archetype_primary,archetype_secondary,value_type,access_tier,status_v1,v1_decision_basis,v2_kill,wedge,ceiling,combined,passes_gates,evidence_confidence,status_v2
+C01,UK SME late payment,1,LEAKAGE_RECOVERY,INVENTORY_WORKING_CAPITAL,REDIST,A,KILLED,K16 structural bottleneck; K6 incumbent tooling cheap,K16;K6,65.0,46.0,54.7,n/a (killed),M,KILLED v2 (K16;K6)
+C02,Retailer deductions (US CPG),1,LEAKAGE_RECOVERY,INFORMATION_FLOW,REDIST,A,SURVIVOR (suspended on S1 for magnitude),"Score 77.4 (#2), robust; red team: saturation",K6,72.0,60.4,65.9,n/a (killed),M,KILLED v2 (K6): independent CRF data confirms problem (6-10% of deduction $ invalid) but every checked segment now served (S76)
+C03,Manufacturing unplanned downtime,1,MAINTENANCE,ASSET_UTILISATION,PROD,B,KILLED,K1 access; K8 capital; K15 enterprise sales,,52.0,94.0,69.9,no,M,PARKED v2: reinstated (v1 kills were constraint-based); fails WEDGE gate - no tier-A entry
+C04,NHS outpatient no-shows,1,CUSTOMER_FLOW,SCHEDULING,PROD,B,KILLED,K15 enterprise/public procurement; K6 saturation,K6,51.2,57.0,54.0,n/a (killed),M,KILLED v2 (K6)
+C05,US prior authorisation,1,COMPLIANCE_ADMINISTRATION,DECISION_LATENCY,MIXED,B,KILLED,K7 licence/PHI; K1 access,K6,47.8,62.0,54.4,n/a (killed),M,KILLED v2 (K6: funded PA-automation incumbents + regulation)
+C06,US claim denials,1,LEAKAGE_RECOVERY,COMPLIANCE_ADMINISTRATION,REDIST,B,KILLED,K7; K1; K6,K6,63.4,62.4,62.9,n/a (killed),M,KILLED v2 (K6)
+C07,Truck detention (US),1,WAITING_DELAY,COORDINATION,PROD,B,KILLED,K10 misaligned incentives; K16,K10;K16,48.2,58.0,52.9,n/a (killed),M,KILLED v2 (K10;K16)
+C08,Construction rework,1,QUALITY_ERRORS,INFORMATION_FLOW,PROD,B,KILLED,K9 causation; K5 proof cycle,K9,48.0,84.6,63.7,n/a (killed),M,KILLED v2 (K9)
+C09,Contract value leakage,1,PROCUREMENT,LEAKAGE_RECOVERY,REDIST,B,KILLED,K2 unmeasurable as defined; K15. Narrow measurable variant (price compliance) absorbed into C14,K2,42.0,58.0,49.4,n/a (killed),M,KILLED v2 (K2)
+C10,Law-firm billing lock-up,1,INVENTORY_WORKING_CAPITAL,KNOWLEDGE_WORK,REDIST,A,KILLED,K6 incumbents own the workflow,K6,63.2,47.0,54.5,n/a (killed),M,KILLED v2 (K6)
+C11,Construction retentions (new flow),1,LEAKAGE_RECOVERY,INVENTORY_WORKING_CAPITAL,REDIST,A,MERGED into C27 (partial kill),K11 vanishing problem for new retentions; legacy stock retained in C27,K11,69.0,41.0,53.2,n/a (killed),M,KILLED v2 (K11)
+C12,Planning application invalidation,1,COMPLIANCE_ADMINISTRATION,QUALITY_ERRORS,PROD,A,SURVIVOR,"Score 68.0 (#6), not robust",,67.2,70.4,68.8,yes,M,SURVIVOR v2 (passes gates; not robust) - candidate adjacency to N05 'regulatory submission quality'
+C13,Involuntary subscription churn,1,LEAKAGE_RECOVERY,,REDIST,A,KILLED,K6 solved cheaply; K18 platform dependency,K6;K18,72.6,39.0,53.2,n/a (killed),L,KILLED v2 (K6;K18)
+C14,AP overpayment recovery,1,LEAKAGE_RECOVERY,PROCUREMENT,REDIST,B,SURVIVOR (weak),"Score 67.4 (#7), not robust",,63.4,54.0,58.5,no,M,PARKED v2 (fails CEILING gate: redistributive)
+C15,SME public tenders,1,KNOWLEDGE_WORK,PROCUREMENT,REDIST,A,KILLED,K9; K5,K9,49.2,62.0,55.2,n/a (killed),M,KILLED v2 (K9)
+C16,Hospitality food waste,1,QUALITY_ERRORS,FORECASTING,PROD,A,KILLED,K3 tiny capturable value; K6,K3,61.4,63.0,62.2,n/a (killed),M,KILLED v2 (K3)
+C17,Missed calls (trades),1,CUSTOMER_FLOW,,REDIST,A,KILLED,K6; S1 vendor-only evidence,K6,60.4,38.6,48.3,n/a (killed),L,KILLED v2 (K6)
+C18,Insurance claims leakage,1,LEAKAGE_RECOVERY,DECISION_LATENCY,REDIST,B,KILLED,K15; K1,,54.6,65.4,59.8,no,M,PARKED v2: reinstated from v1 constraint kill; fails WEDGE gate
+C19,Social housing voids/repairs,1,MAINTENANCE,WAITING_DELAY,PROD,B,KILLED,K3 (voids); K15; K13 risk for repairs,K3,49.6,57.0,53.2,n/a (killed),M,KILLED v2 (K3 voids); repairs not separately investigated
+C20,Carrier invoice/SLA refunds,1,LEAKAGE_RECOVERY,,REDIST,A,SURVIVOR (suspended on S1),"Score 71.2 (#5), not robust",,72.4,42.0,55.1,no,L,PARKED v2 (fails CEILING gate)
+C21,Retail returns fraud,1,LEAKAGE_RECOVERY,,REDIST,B,KILLED,K15; K6,K6,53.0,57.0,55.0,n/a (killed),M,KILLED v2 (K6)
+C22,Energy broker commissions,1,LEAKAGE_RECOVERY,PROCUREMENT,REDIST,A,KILLED,K11 vanishing; K14 extractive,K11;K14,59.0,30.0,42.1,n/a (killed),M,KILLED v2 (K11;K14)
+C23,Field-service repeat visits,1,MAINTENANCE,QUALITY_ERRORS,PROD,B,KILLED,K6; K9,K6,52.6,61.0,56.6,n/a (killed),L,KILLED v2 (K6)
+C24,Customs declaration production,1,COMPLIANCE_ADMINISTRATION,INFORMATION_FLOW,PROD,B,SURVIVOR (weak),"Score 63.8 (#10), not robust",,56.6,73.0,64.3,no,M,PARKED v2 (fails WEDGE gate); absorbed as adjacency of C25b
+C25,UK import duty overpayment (broad recovery),1,LEAKAGE_RECOVERY,COMPLIANCE_ADMINISTRATION,REDIST,A,SURVIVOR (suspended on S2 magnitude),"Score 78.4 (#1), robust, but LOW confidence",,63.8,59.0,61.4,no,L,MATERIALLY WEAKENED -> PARKED v2 (fails CEILING gate); broad recovery thesis replaced by C25b arena
+C25b,Trade compliance decision quality under tariff volatility,derived,DECISION_LATENCY,COMPLIANCE_ADMINISTRATION,MIXED,B,DERIVED in step 1B,,,63.6,90.0,75.7,yes,L,SURVIVOR (passes gates; confidence L)
+C26,Out-of-hours electricity analysis,1,RESOURCE_ALLOCATION,,PROD,A,SURVIVOR,"Score 72.2 (#4), robust",K6,58.4,47.0,52.4,n/a (killed),M,KILLED v2 (K6): free supplier portals already provide half-hourly out-of-hours reporting (S74)
+C27,Subcontractor debt recovery (collection layer),1,LEAKAGE_RECOVERY,INVENTORY_WORKING_CAPITAL,REDIST,A,SURVIVOR,"Score 72.4 (#3), robust",,64.2,56.0,60.0,no,M,"MATERIALLY WEAKENED -> PARKED v2 (fails CEILING gate); retentions K11, ordinary late payment K16; pre-dispute layer re-entered as C27b"
+C27b,Construction contract administration reliability (pre-dispute),derived,INFORMATION_FLOW,COORDINATION,MIXED,A,DERIVED in step 1B,,,69.8,92.0,80.1,yes,M,SURVIVOR (passes both gates)
+C29,Energy billing errors,1,LEAKAGE_RECOVERY,,REDIST,A,SURVIVOR (suspended on S1),"Score 66.4 (#9), not robust",,64.8,42.0,52.2,no,L,PARKED v2 (fails CEILING gate)
+C30,Distributor order entry,1,INFORMATION_FLOW,KNOWLEDGE_WORK,PROD,A,SURVIVOR (weak),"Score 67.4 (#8), not robust",,62.6,61.0,61.8,yes,M,SURVIVOR v2 (passes gates narrowly; not robust); overlaps prior venture - no bonus
+N01,NHS delayed discharge,2,COORDINATION,DECISION_LATENCY,PROD,B,NEW in scan 2,,,55.6,87.0,69.5,no,M,PARKED (fails WEDGE gate)
+N02,NHS theatre utilisation,2,SCHEDULING,ASSET_UTILISATION,PROD,B,NEW in scan 2,,,58.8,77.0,67.3,no,M,PARKED (fails WEDGE gate)
+N03,HGV empty running,2,ASSET_UTILISATION,COORDINATION,PROD,B,NEW in scan 2,,,52.2,63.0,57.3,no,M,PARKED (fails both gates)
+N04,Grid connection queue,2,WAITING_DELAY,DECISION_LATENCY,PROD,C,NEW in scan 2,,K11;K16,52.6,76.0,63.2,n/a (killed),M,KILLED (K11; K16)
+N05,High-risk building Gateway 2 submission quality,2,COMPLIANCE_ADMINISTRATION,INFORMATION_FLOW,PROD,B,NEW in scan 2,,,69.8,79.4,74.4,yes,M,SURVIVOR (passes both gates)
+N06,SME management practices,2,WORKFORCE_PRODUCTIVITY,DECISION_LATENCY,PROD,A,NEW in scan 2,,,54.6,93.0,71.3,no,M,PARKED (fails WEDGE gate)
+N07,Social care workforce and homecare scheduling,2,SCHEDULING,WORKFORCE_PRODUCTIVITY,PROD,A,NEW in scan 2,,,56.6,73.0,64.3,no,M,PARKED (fails both gates)
+N08,SME manufacturing throughput (OEE),2,THROUGHPUT,ASSET_UTILISATION,PROD,B,NEW in scan 2,,,62.6,93.0,76.3,yes,M,SURVIVOR (passes both gates)
+N09,Food manufacturing surplus / demand forecasting,2,FORECASTING,QUALITY_ERRORS,PROD,B,NEW in scan 2,,,59.4,76.0,67.2,no,M,PARKED (fails WEDGE gate)
+N10,Medication errors,2,QUALITY_ERRORS,INFORMATION_FLOW,PROD,B,NEW in scan 2,,K13,42.4,69.0,54.1,n/a (killed),M,KILLED (K13)
+N11,Customer-service failure demand,2,CUSTOMER_FLOW,QUALITY_ERRORS,PROD,A,NEW in scan 2,,K6,58.2,67.0,62.4,n/a (killed),M,KILLED (K6: named incumbents; SME and enterprise segments both served)
+N12,Water network leakage,2,MAINTENANCE,ASSET_UTILISATION,PROD,B,NEW in scan 2,,K6,47.2,66.0,55.8,n/a (killed),M,KILLED (K6)
+N13,Children's residential placements,2,RESOURCE_ALLOCATION,PROCUREMENT,MIXED,B,NEW in scan 2,,K16,44.6,50.0,47.2,n/a (killed),M,KILLED (K16)
+N14,NHS procurement price variation,2,PROCUREMENT,INFORMATION_FLOW,REDIST,B,NEW in scan 2,,K6,51.2,54.0,52.6,n/a (killed),M,KILLED (K6)
+N15,EHCP timeliness,2,DECISION_LATENCY,COMPLIANCE_ADMINISTRATION,PROD,B,NEW in scan 2,,K16,44.8,50.0,47.3,n/a (killed),M,KILLED (K16)
+N16,NHS waiting-list validation,2,RESOURCE_ALLOCATION,INFORMATION_FLOW,MIXED,B,NEW in scan 2,,K11;K14,56.8,40.0,47.7,n/a (killed),M,KILLED (K11; K14)
+N17,Sickness absence,2,WORKFORCE_PRODUCTIVITY,,PROD,A,NEW in scan 2,,K9,48.8,65.0,56.3,n/a (killed),M,KILLED (K9)
+N18,MRO spare-parts inventory,2,INVENTORY_WORKING_CAPITAL,MAINTENANCE,PROD,B,NEW in scan 2,,,62.8,75.0,68.6,yes,L,SURVIVOR (passes gates; suspended on S1)
+N19,Inventory and working-capital decisions (mid-market),2,INVENTORY_WORKING_CAPITAL,FORECASTING,PROD,A,NEW in scan 2,,,68.4,87.0,77.1,yes,M,SURVIVOR (passes both gates)
+N20,Engineering knowledge loss,2,KNOWLEDGE_WORK,MAINTENANCE,PROD,B,NEW in scan 2,,K2;K9,46.6,73.0,58.3,n/a (killed),L,KILLED (K2; K9) - retained as a capability feature of maintenance arenas
+N21,Accountancy practice capacity,2,KNOWLEDGE_WORK,WORKFORCE_PRODUCTIVITY,PROD,A,NEW in scan 2,,,65.4,70.0,67.7,yes,L,SURVIVOR (passes gates; suspended on S1)
+N22,Manufacturing quote (RFQ) latency,2,DECISION_LATENCY,KNOWLEDGE_WORK,PROD,A,NEW in scan 2,,,59.4,77.0,67.6,no,L,PARKED (fails WEDGE gate)
+N23,Retail on-shelf availability,2,FORECASTING,INVENTORY_WORKING_CAPITAL,PROD,B,NEW in scan 2,,K6,54.4,66.0,59.9,n/a (killed),M,KILLED (K6)
+N24,Business demand flexibility,2,RESOURCE_ALLOCATION,,PROD,A,NEW in scan 2,,K3,51.0,62.0,56.2,n/a (killed),M,KILLED (K3)
+N25,Court and tribunal backlogs,2,WAITING_DELAY,,PROD,C,NEW in scan 2,,K15;access-C,48.4,52.0,50.2,n/a (killed),M,KILLED (access tier C)
+C28,Unclaimed guaranteed-service refunds and parcel surcharges,1,,,,,MERGED into C20,Duplicate mechanism,,,,,,L,unchanged from v1
+X01,Wasted cloud spend,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X02,Unused SaaS licences,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X03,Inventory record inaccuracy,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X04,Client document chasing / capacity,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X05,Candidate screening time,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X06,Manual onboarding reviews,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X07,Transaction delays,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X08,Submission intake,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X09,Subsidy/grant administration,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
+X10,Service-charge overcharging of tenants,screened,,,,,SCREENED ONLY (not investigated),Desk screen; not counted as investigated,,,,,,None,unchanged from v1
