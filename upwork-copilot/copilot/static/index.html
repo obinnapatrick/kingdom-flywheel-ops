@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upwork Copilot</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1b2430;--mute:#667085;--line:#e4e7ec;--brand:#14a800;--brand-ink:#0b6b00;
+--warn:#b54708;--warnbg:#fffaeb;--bad:#b42318;--badbg:#fef3f2;--ok:#067647;--okbg:#ecfdf3;--info:#175cd3;--infobg:#eff8ff;--r:10px}
+@media(prefers-color-scheme:dark){:root{--bg:#0f141b;--card:#171e28;--ink:#e8ecf2;--mute:#9aa6b6;--line:#2a3442;--brand:#4ccf33;--brand-ink:#7be065;
+--warn:#fdb022;--warnbg:#2a2110;--bad:#fda29b;--badbg:#2b1513;--ok:#6ce9a6;--okbg:#10261b;--info:#84caff;--infobg:#112033}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.bar{max-width:1100px;margin:auto;padding:0 16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.logo{font-weight:700;padding:14px 0}.logo b{color:var(--brand)}
+nav{display:flex;gap:2px;flex-wrap:wrap}nav button{background:none;border:0;color:var(--mute);font:inherit;padding:14px 12px;cursor:pointer;border-bottom:2px solid transparent}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--brand);font-weight:600}
+main{max-width:1100px;margin:auto;padding:20px 16px 60px}
+.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card h2,.card h3{margin:0 0 10px;font-size:15px}.kpi .v{font-size:28px;font-weight:700;letter-spacing:-.5px}.kpi .l{color:var(--mute);font-size:13px}.kpi .s{color:var(--mute);font-size:12px;margin-top:2px}
+.bar-track{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}.bar-fill{height:100%;background:var(--brand)}
+button.btn{font:inherit;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 12px;cursor:pointer}
+button.btn:hover{border-color:var(--mute)}button.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}button.btn.sm{padding:3px 9px;font-size:13px}
+button.btn.danger{color:var(--bad)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%}
+textarea{resize:vertical;min-height:90px}label{display:block;font-size:13px;color:var(--mute);margin:10px 0 3px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.row>*{flex:1;min-width:120px}.row>.fit{flex:0 0 auto;min-width:0}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;color:var(--mute);font-weight:500;font-size:12px;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}tr:last-child td{border:0}tr.click{cursor:pointer}tr.click:hover td{background:var(--bg)}
+.badge{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;font-weight:600}
+.b-bid,.b-pass,.b-hired{background:var(--okbg);color:var(--ok)}.b-maybe,.b-warn,.b-interview,.b-viewed{background:var(--warnbg);color:var(--warn)}
+.b-skip,.b-fail,.b-lost{background:var(--badbg);color:var(--bad)}.b-draft,.b-sent{background:var(--infobg);color:var(--info)}
+.note{border-left:3px solid var(--line);padding:8px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0}
+.note.action{border-color:var(--warn)}.note.info{border-color:var(--info)}.note b{display:block}.mute{color:var(--mute)}.small{font-size:13px}
+.flags{background:var(--badbg);color:var(--bad);border-radius:8px;padding:8px 12px;margin:8px 0}
+.hidden{display:none}.err{color:var(--bad);margin-top:8px}.empty{color:var(--mute);padding:20px;text-align:center}
+.pill{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:1px 9px;font-size:12px;margin:2px 3px 2px 0}
+.banner{background:var(--infobg);color:var(--info);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:13px}
+.check{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}.check:last-child{border:0}.check .pts{min-width:52px;text-align:right;color:var(--mute);font-variant-numeric:tabular-nums}
+.check>div:nth-child(2){flex:1}
+</style>
+</head>
+<body>
+<header><div class="bar"><div class="logo">Upwork <b>Copilot</b></div>
+<nav id="nav" role="tablist"></nav></div></header>
+<main>
+<div class="banner">You stay in control: this app scores jobs, drafts proposals and tracks results. It never logs in to Upwork or submits anything. Copy a draft, edit it, and send it yourself on Upwork.</div>
+<div id="view"></div>
+</main>
+<script>
+const TABS=[["dash","Dashboard"],["jobs","Jobs"],["pipe","Pipeline"],["profile","Profile"],["insights","Insights"]];
+let tab=localStorage.getItem("tab")||"dash",state={};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=n=>"$"+Math.round(n||0).toLocaleString();
+const pct=n=>n==null?"–":Math.round(n*100)+"%";
+async function api(path,method="GET",body){
+  const r=await fetch("/api"+path,{method,headers:{"Content-Type":"application/json"},body:method==="GET"?undefined:JSON.stringify(body||{})});
+  const j=await r.json();if(!r.ok)throw new Error(j.error||r.statusText);return j;
+}
+function nav(){$("#nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" data-t="${k}">${l}</button>`).join("");
+  document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;localStorage.setItem("tab",tab);render()})}
+async function render(){nav();const v=$("#view");v.innerHTML='<div class="empty">Loading…</div>';
+  try{await({dash,jobs,pipe,profile,insights}[tab])(v)}catch(e){v.innerHTML=`<div class="card err">${esc(e.message)}</div>`}}
+const badge=(t,c)=>`<span class="badge b-${c||t}">${esc(t)}</span>`;
+function bar(p){return `<div class="bar-track"><div class="bar-fill" style="width:${Math.max(0,Math.min(100,p))}%"></div></div>`}
+function notes(list){return list.length?list.map(i=>`<div class="note ${esc(i.level)}"><b>${esc(i.title)}</b>${esc(i.detail)}</div>`).join(""):'<div class="empty">Nothing to do right now.</div>'}
+
+async function dash(v){
+  const d=await api("/dashboard"),p=d.pacing,f=d.funnel,a=d.profile_audit;
+  v.innerHTML=`<div class="grid g4">
+   <div class="card kpi"><div class="l">This month</div><div class="v">${money(p.earned)}</div><div class="s">of ${money(p.revenue_target)} goal</div>${bar(100*p.earned/p.revenue_target)}</div>
+   <div class="card kpi"><div class="l">Proposals still needed</div><div class="v">${p.proposals_needed}</div><div class="s">≈ ${p.per_week}/week · ${p.hires_needed} hire(s) at ${pct(p.win_rate_used)} win rate</div></div>
+   <div class="card kpi"><div class="l">Profile score</div><div class="v">${a.score}<span class="mute" style="font-size:15px">/100</span></div>${bar(a.score)}</div>
+   <div class="card kpi"><div class="l">Funnel</div><div class="v">${f.sent} → ${f.hired}</div><div class="s">view ${pct(f.view_rate)} · interview ${pct(f.interview_rate)} · win ${pct(f.win_rate)}</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+   <div class="card"><h2>What to do next</h2>${notes(d.insights.filter(i=>i.level==="action").slice(0,5))}</div>
+   <div class="card"><h2>Monthly goal</h2><div class="row"><div><label>Revenue target ($)</label><input id="gt" type="number" min="1" value="${p.revenue_target}"></div>
+    <div><label>Avg contract value ($)</label><input id="ga" type="number" min="1" value="${p.avg_contract_value}"></div></div>
+    <p class="small mute">${esc(p.note)}</p><button class="btn primary" id="gs">Save goal</button> <span id="gm" class="small mute"></span>
+    <h3 style="margin-top:18px">Log earnings</h3><div class="row"><div><label>Amount ($)</label><input id="ea" type="number" min="1"></div>
+    <div><label>Date</label><input id="ed" type="date" value="${new Date().toISOString().slice(0,10)}"></div><div><label>Note</label><input id="en"></div></div>
+    <button class="btn" id="es" style="margin-top:10px">Add earning</button><div class="err" id="ee"></div></div></div>`;
+  $("#gs").onclick=async()=>{try{await api("/goal","PUT",{revenue_target:$("#gt").value,avg_contract_value:$("#ga").value});render()}catch(e){$("#gm").textContent=e.message}};
+  $("#es").onclick=async()=>{try{await api("/earnings","POST",{amount:$("#ea").value,date:$("#ed").value,note:$("#en").value});render()}catch(e){$("#ee").textContent=e.message}};
+}
+
+async function jobs(v){
+  const {jobs}=await api("/jobs");
+  v.innerHTML=`<div class="card"><h2>Add a job</h2>
+   <p class="small mute">Open a job on Upwork, copy the whole page text, and paste it here. Check the parsed fields before saving; missing client details lower confidence.</p>
+   <textarea id="jt" placeholder="Paste job post text…"></textarea>
+   <div style="margin-top:8px"><button class="btn primary" id="jp">Parse</button></div><div id="jf"></div></div>
+   <div class="card" style="margin-top:14px"><h2>Saved jobs (best fit first)</h2>${jobs.length?`<table><thead><tr><th>Fit</th><th>Job</th><th>Budget</th><th>Client</th><th></th></tr></thead><tbody>
+   ${jobs.map(j=>`<tr class="click" data-id="${j.id}"><td>${badge(j.decision)} <b>${j.fit_score}</b></td><td>${esc(j.title)}${j.fit_detail.flags?.length?'<div class="small" style="color:var(--bad)">⚠ '+esc(j.fit_detail.flags[0])+'</div>':''}</td>
+   <td>${j.budget_max?(j.budget_type==="hourly"?`$${j.budget_min??""}–${j.budget_max}/hr`:money(j.budget_max)):"–"}</td>
+   <td class="small">${j.client_verified===1?"✓ verified":j.client_verified===0?"✗ unverified":"?"}${j.client_spend?` · ${money(j.client_spend)}`:""}</td><td class="small mute">${j.proposals_count??"?"} props</td></tr>`).join("")}</tbody></table>`:'<div class="empty">No jobs yet. Paste one above.</div>'}</div>
+   <div id="jd"></div>`;
+  $("#jp").onclick=async()=>{const p=await api("/jobs/parse","POST",{text:$("#jt").value});if(!p.title){$("#jf").innerHTML='<div class="err">Paste some text first.</div>';return}
+    const f=(id,l,val,t="text")=>`<div><label>${l}</label><input id="${id}" type="${t}" value="${esc(val??"")}"></div>`;
+    $("#jf").innerHTML=`<div class="row">${f("f_title","Title",p.title)}<div><label>Type</label><select id="f_bt"><option ${p.budget_type==="hourly"?"selected":""}>hourly</option><option ${p.budget_type==="fixed"?"selected":""}>fixed</option></select></div>
+     ${f("f_bmin","Budget min",p.budget_min,"number")}${f("f_bmax","Budget max",p.budget_max,"number")}</div>
+     <div class="row">${f("f_skills","Skills (comma separated)",(p.skills||[]).join(", "))}${f("f_spend","Client total spent ($)",p.client_spend,"number")}${f("f_hr","Hire rate %",p.client_hire_rate,"number")}${f("f_rt","Client rating",p.client_rating,"number")}
+     <div><label>Payment verified</label><select id="f_v"><option value="">unknown</option><option value="1" ${p.client_verified===1?"selected":""}>yes</option><option value="0" ${p.client_verified===0?"selected":""}>no</option></select></div>${f("f_pc","Proposals",p.proposals_count,"number")}${f("f_cc","Connects cost",p.connects_cost,"number")}</div>
+     <label>Job URL (optional)</label><input id="f_url"><label>Description</label><textarea id="f_desc">${esc(p.description)}</textarea>
+     <div style="margin-top:8px"><button class="btn primary" id="js">Save &amp; score</button> <span class="err" id="je"></span></div>`;
+    $("#js").onclick=async()=>{try{await api("/jobs","POST",{title:$("#f_title").value,description:$("#f_desc").value,budget_type:$("#f_bt").value,budget_min:$("#f_bmin").value,budget_max:$("#f_bmax").value,skills:$("#f_skills").value,client_spend:$("#f_spend").value,client_hire_rate:$("#f_hr").value,client_rating:$("#f_rt").value,client_verified:$("#f_v").value,proposals_count:$("#f_pc").value,connects_cost:$("#f_cc").value,url:$("#f_url").value});render()}catch(e){$("#je").textContent=e.message}}};
+  document.querySelectorAll("tr.click").forEach(r=>r.onclick=()=>jobDetail(jobs.find(j=>j.id==r.dataset.id)));
+}
+function jobDetail(j){const d=j.fit_detail,box=$("#jd");
+  box.innerHTML=`<div class="card" style="margin-top:14px"><h2>${esc(j.title)} ${badge(j.decision)} <span class="mute">${j.fit_score}/100</span></h2>
+   ${d.flags?.length?`<div class="flags">${d.flags.map(esc).join("<br>")}</div>`:""}
+   <div class="small mute">${Object.entries(d.parts).map(([k,v])=>`${k} ${v}`).join(" · ")}</div>
+   ${d.reasons?.map(r=>`<div class="small">• ${esc(r)}</div>`).join("")||""}
+   <p class="small" style="white-space:pre-wrap">${esc(j.description.slice(0,700))}${j.description.length>700?"…":""}</p>
+   <button class="btn primary" id="dr" ${d.flags?.length?"disabled title='Red flags: not drafting'":""}>Draft proposal</button> <button class="btn danger sm" id="dl">Delete job</button>
+   <div id="dp"></div></div>`;box.scrollIntoView({block:"start"});
+  $("#dl").onclick=async()=>{await api("/jobs/"+j.id,"DELETE");render()};
+  $("#dr").onclick=async()=>{$("#dr").disabled=true;const p=await api(`/jobs/${j.id}/draft`,"POST",{});
+    $("#dp").innerHTML=`<h3 style="margin-top:14px">Draft <span class="pill">variant: ${esc(p.variant)}</span><span class="pill">${esc(p.source)}</span></h3>
+     <textarea id="pb" style="min-height:200px">${esc(p.body)}</textarea>
+     <p class="small mute">Replace every [ADD: …] with something true. Then copy it into Upwork and submit it yourself.</p>
+     <div class="row"><div class="fit"><button class="btn" id="cp">Copy</button></div><div><label>Connects spent</label><input id="pcs" type="number" value="${j.connects_cost??""}"></div><div><label>Your bid ($)</label><input id="pbid" type="number"></div>
+     <div class="fit"><button class="btn primary" id="ms">I sent it on Upwork</button></div></div><div class="err" id="pe"></div>`;
+    $("#pb").scrollIntoView({block:"center"});
+    $("#cp").onclick=()=>navigator.clipboard.writeText($("#pb").value).then(()=>$("#cp").textContent="Copied ✓");
+    $("#ms").onclick=async()=>{if(/\[ADD:/.test($("#pb").value)&&!confirm("The draft still has [ADD: …] placeholders. Mark as sent anyway?"))return;
+      try{await api("/proposals/"+p.id,"PATCH",{body:$("#pb").value,connects_spent:$("#pcs").value||0,bid_amount:$("#pbid").value,status:"sent"});tab="pipe";localStorage.setItem("tab",tab);render()}catch(e){$("#pe").textContent=e.message}}}}
+
+async function pipe(v){
+  const {proposals}=await api("/proposals"),ST=["draft","sent","viewed","interview","hired","lost"];
+  v.innerHTML=`<div class="card"><h2>Proposals</h2>${proposals.length?`<table><thead><tr><th>Job</th><th>Variant</th><th>Connects</th><th>Status</th></tr></thead><tbody>
+   ${proposals.map(p=>`<tr><td>${esc(p.job_title)}<div class="small mute">${p.sent_at?"sent "+esc(p.sent_at.slice(0,10)):"not sent"}</div></td><td class="small">${esc(p.variant)}</td><td>${p.connects_spent}</td>
+   <td><select data-p="${p.id}">${ST.map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join("")}</select></td></tr>`).join("")}</tbody></table>`
+   :'<div class="empty">No proposals yet. Draft one from the Jobs tab.</div>'}<div class="err" id="pe"></div>
+   <p class="small mute">Update status as clients respond on Upwork. This is what lets the Insights tab learn what works for you. Losing a job keeps the stage it reached.</p></div>`;
+  document.querySelectorAll("select[data-p]").forEach(s=>s.onchange=async()=>{try{await api("/proposals/"+s.dataset.p,"PATCH",{status:s.value});render()}catch(e){$("#pe").textContent=e.message;render()}});
+}
+
+async function profile(v){
+  const {profile:p,audit:a,versions}=await api("/profile");
+  const ta=(id,l,val,h)=>`<label>${l}</label><textarea id="${id}" style="min-height:${h||60}px">${esc(val)}</textarea>`;
+  v.innerHTML=`<div class="grid g2"><div class="card"><h2>Your profile (paste from Upwork)</h2>
+   <label>Title</label><input id="p_title" value="${esc(p.title)}">
+   ${ta("p_overview","Overview",p.overview,180)}
+   <label>Niche / who you help</label><input id="p_niche" value="${esc(p.niche)}">
+   ${ta("p_skills","Skills (comma separated)",p.skills.join(", "))}
+   ${ta("p_proof","Proof points: true results, one per line. Drafts use only these.",p.proof_points.join("\n"),80)}
+   <div class="row"><div><label>Hourly rate ($)</label><input id="p_rate" type="number" value="${p.hourly_rate}"></div><div><label>Min fixed budget ($)</label><input id="p_min" type="number" value="${p.min_fixed_budget}"></div><div><label>Portfolio items</label><input id="p_port" type="number" value="${p.portfolio_count}"></div></div>
+   <label>What did you change? (for your history)</label><input id="p_note"><div style="margin-top:10px"><button class="btn primary" id="ps">Save</button> <span id="pm" class="small mute"></span></div></div>
+   <div><div class="card"><h2>Audit: ${a.score}/100</h2>${bar(a.score)}<div style="margin-top:8px">${a.checks.map(c=>`<div class="check">${badge(c.status)}<div>${esc(c.label)}${c.advice?`<div class="small mute">${esc(c.advice)}</div>`:""}</div><div class="pts">${c.points}/${c.max}</div></div>`).join("")}</div></div>
+   <div class="card" style="margin-top:14px"><h2>Change history</h2>${versions.length?versions.map(x=>`<div class="small"><b>v${x.id}</b> · ${esc(x.ts.slice(0,10))} · ${esc(x.note)}</div>`).join(""):'<div class="small mute">No saved versions yet.</div>'}
+   <p class="small mute">Change one thing at a time. Each proposal is tagged with the version live when you sent it, so Insights can compare results.</p></div></div></div>`;
+  $("#ps").onclick=async()=>{try{await api("/profile","PUT",{title:$("#p_title").value,overview:$("#p_overview").value,niche:$("#p_niche").value,skills:$("#p_skills").value,proof_points:$("#p_proof").value,hourly_rate:$("#p_rate").value,min_fixed_budget:$("#p_min").value,portfolio_count:$("#p_port").value,_note:$("#p_note").value});render()}catch(e){$("#pm").textContent=e.message}};
+}
+
+async function insights(v){
+  const d=await api("/dashboard"),f=d.funnel,row=(n,s)=>`<tr><td>${esc(n)}</td><td>${s.sent}</td><td>${pct(s.view_rate)}</td><td>${pct(s.interview_rate)}</td><td>${pct(s.win_rate)}</td><td>${s.connects_per_hire??"–"}</td></tr>`;
+  const head='<thead><tr><th></th><th>Sent</th><th>Viewed</th><th>Interview</th><th>Hired</th><th>Connects/hire</th></tr></thead>';
+  v.innerHTML=`<div class="grid g2"><div class="card"><h2>Recommendations</h2>${notes(d.insights)}</div><div><div class="card"><h2>Overall funnel</h2>
+   <table>${head}<tbody>${row("All",f)}</tbody></table></div>
+   <div class="card" style="margin-top:14px"><h2>Proposal variants (A/B)</h2>${Object.keys(d.variants).length?`<table>${head}<tbody>${Object.entries(d.variants).map(([k,s])=>row(k,s)).join("")}</tbody></table>`:'<div class="empty">No data yet.</div>'}</div>
+   <div class="card" style="margin-top:14px"><h2>By profile version</h2>${d.versions.length?`<table>${head}<tbody>${d.versions.map(s=>row("v"+s.version+" "+s.note,s)).join("")}</tbody></table>`:'<div class="empty">No data yet.</div>'}
+   <p class="small mute">Compare only versions with 10+ proposals each. Fewer than that is noise.</p></div></div></div>`;
+}
+render();
+</script>
+</body>
+</html>
