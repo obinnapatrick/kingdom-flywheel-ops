@@ -28,6 +28,20 @@ Optional: set `ANTHROPIC_API_KEY` to have Claude write proposal drafts (model vi
 `claude-sonnet-5-5`). Without it, a grounded template is used. Either way drafts only use facts you entered
 under "Proof points" and leave `[ADD: …]` placeholders rather than inventing results.
 
+## Browser-only version (iPad / phone): `web/`
+
+`web/core.js` is a JavaScript port of the scoring, audit, drafting and analytics logic, and `web/app.template.html`
+is the UI. `node web/build.js` inlines the core into one self-contained page at `web/dist/index.html`. It needs no
+server: data is kept in the browser (or, when published as a claude.ai Artifact, in the viewer's private account
+store), and drafts can use Claude through the host page instead of an API key.
+
+```bash
+node --test web/test_core.js        # 20 tests mirroring tests/test_copilot.py
+node web/build.js                   # -> web/dist/index.html
+```
+
+The Python app and the browser page share the same scoring rules; if you change one, change the other.
+
 ## The weekly loop
 
 1. **Profile**: paste your profile and your true proof points. Fix the top audit items. Every real change is saved as a

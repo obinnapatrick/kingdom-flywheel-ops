@@ -1,0 +1,342 @@
+<title>Bid Desk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky masthead + tab strip over a ledger-style working area; two columns on iPad landscape, one on phone.
+   Type: Bricolage Grotesque for headings, IBM Plex Sans for text, IBM Plex Mono for every figure. */
+:root{
+  --bg:#f1f3ef;--surface:#fafaf7;--sunk:#e8ebe5;--ink:#16201b;--mute:#5a6760;--line:#d8ddd5;
+  --accent:#0d5c49;--accent-fg:#ffffff;--accent-soft:#dcebe5;
+  --ok:#0a6b3d;--ok-bg:#dff1e6;--warn:#8a4a00;--warn-bg:#f8ead0;--bad:#a3261b;--bad-bg:#f8e1de;--info:#1f4f99;--info-bg:#e0e9f7;
+  --f-display:"Bricolage Grotesque","Avenir Next","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1411;--surface:#151d19;--sunk:#1c2621;--ink:#e6ece8;--mute:#9aa8a0;--line:#2a3730;
+  --accent:#5fd0a8;--accent-fg:#06231a;--accent-soft:#16372c;
+  --ok:#6fdca0;--ok-bg:#12301f;--warn:#f0b957;--warn-bg:#35280f;--bad:#ff9d92;--bad-bg:#3a1713;--info:#8db9ff;--info-bg:#15263f;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1411;--surface:#151d19;--sunk:#1c2621;--ink:#e6ece8;--mute:#9aa8a0;--line:#2a3730;
+  --accent:#5fd0a8;--accent-fg:#06231a;--accent-soft:#16372c;
+  --ok:#6fdca0;--ok-bg:#12301f;--warn:#f0b957;--warn-bg:#35280f;--bad:#ff9d92;--bad-bg:#3a1713;--info:#8db9ff;--info-bg:#15263f;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--bg)}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+h2{font-size:18px}h3{font-size:15px}
+.mono,.fig{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.mute{color:var(--mute)}.small{font-size:13px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);padding-top:14px}
+.mast{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mast h1{font-size:24px}
+#sync{font-size:12px;color:var(--mute)}
+nav{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin-top:8px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;min-height:44px;padding:0 14px;background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font:500 15px var(--f-body);cursor:pointer}
+nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
+main{padding-top:18px;display:grid;gap:16px}
+.note-top{font-size:13px;color:var(--mute);border-left:3px solid var(--accent);padding:2px 0 2px 10px}
+.grid{display:grid;gap:16px}
+.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.card>h2{margin-bottom:10px}
+.kpi .l{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.kpi .v{font:500 30px/1.2 var(--f-mono);margin-top:4px}
+.kpi .v small{font-size:14px;color:var(--mute)}
+.kpi .s{font-size:12px;color:var(--mute);margin-top:2px}
+.meter{height:6px;background:var(--sunk);margin-top:10px;border-radius:3px;overflow:hidden}.meter i{display:block;height:100%;background:var(--accent)}
+button,select,input,textarea{font:inherit;color:var(--ink)}
+.btn{min-height:44px;padding:0 16px;border-radius:6px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--mute)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.danger{color:var(--bad)}.btn.sm{min-height:36px;padding:0 12px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,select,textarea{width:100%;min-height:44px;padding:8px 10px;background:var(--bg);border:1px solid var(--line);border-radius:6px}
+textarea{min-height:96px;resize:vertical}
+label{display:block;font-size:12px;letter-spacing:.04em;color:var(--mute);margin:12px 0 4px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px;align-items:end}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.badge{display:inline-block;padding:1px 8px;border-radius:3px;font:500 12px var(--f-mono);text-transform:uppercase;letter-spacing:.04em}
+.b-bid,.b-pass,.b-hired{background:var(--ok-bg);color:var(--ok)}
+.b-maybe,.b-warn,.b-interview,.b-viewed{background:var(--warn-bg);color:var(--warn)}
+.b-skip,.b-fail,.b-lost{background:var(--bad-bg);color:var(--bad)}
+.b-draft,.b-sent{background:var(--info-bg);color:var(--info)}
+.job{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;width:100%;text-align:left;padding:12px 0;border:0;border-bottom:1px solid var(--line);background:none;cursor:pointer;min-height:44px}
+.job:last-child{border-bottom:0}.job[aria-current=true]{background:var(--accent-soft);margin:0 -16px;padding:12px 16px}
+.job .sc{font:500 26px/1 var(--f-mono)}.job .sc small{display:block;margin-top:6px}
+.job .t{font-weight:600}.job .m{font-size:13px;color:var(--mute)}
+.flag{background:var(--bad-bg);color:var(--bad);padding:8px 12px;border-radius:6px;margin:8px 0;font-size:14px}
+.note{border-left:3px solid var(--line);padding:8px 12px;margin:0 0 10px;background:var(--bg)}
+.note.action{border-color:var(--warn)}.note.info{border-color:var(--info)}.note b{display:block}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:0 8px;font-size:12px;margin:0 6px 4px 0;color:var(--mute)}
+.check{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);align-items:start}.check:last-child{border:0}
+.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--mute);padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}tr:last-child td{border-bottom:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.empty{color:var(--mute);padding:18px 0;text-align:center}
+.err{color:var(--bad);margin-top:8px;font-size:14px}
+.splash{padding:40px 0;text-align:center;color:var(--mute)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="mast"><h1>Bid Desk</h1><span id="sync" role="status"></span></div>
+    <nav id="nav" role="tablist" aria-label="Sections"></nav>
+  </header>
+  <main>
+    <div class="note-top">Bid Desk scores jobs, drafts proposals and tracks results. It never connects to Upwork: you copy a draft, edit it, and send it yourself.</div>
+    <div id="view"><div class="splash">Loading your data…</div></div>
+  </main>
+</div>
+
+<script>/*CORE*/</script>
+<script>
+(function () {
+"use strict";
+const C = window.CopilotCore;
+const TABS = [["dash", "Dashboard"], ["jobs", "Jobs"], ["pipe", "Pipeline"], ["profile", "Profile"], ["insights", "Insights"]];
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (n) => "$" + Math.round(n || 0).toLocaleString();
+const pct = (n) => (n == null ? "–" : Math.round(n * 100) + "%");
+const ls = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+let state = C.emptyState(), loaded = false, tab = ls.get("bd-tab") || "dash", selJob = null, addOpen = null, parsed = null;
+let uiMsg = {}, armed = null, drafting = false, sampleOK = false;
+const store = { mode: "local", ref: null };
+
+// ------------------------------------------------------------------ storage
+const useCap = async (n) => { try { return window.claude && window.claude.use ? await window.claude.use(n) : null; } catch (e) { return null; } };
+function setSync(t) { const el = $("#sync"); if (el) el.textContent = t; }
+async function load() {
+  let local = null;
+  try { const raw = ls.get("bd-state"); if (raw) local = JSON.parse(raw); } catch (e) {}
+  const [db, user, sample] = await Promise.all([useCap("db"), useCap("user"), useCap("sample")]);
+  sampleOK = !!sample;
+  let cloud = null;
+  if (db && user) {
+    try {
+      const id = await user.id();
+      if (id) {
+        store.ref = db.collection("data/users/" + id).doc("state");
+        store.mode = "cloud";
+        const snap = await store.ref.get();
+        if (snap.exists) cloud = JSON.parse(snap.data().json);
+      }
+    } catch (e) { store.ref = null; store.mode = "local"; }
+  }
+  const pick = cloud || local;
+  if (pick && pick.v === 1) state = pick;
+  loaded = true;
+  setSync(store.mode === "cloud" ? "Saved to your account" : "Saved on this device only");
+  if (store.mode === "cloud" && !cloud && local) persist(); // first cloud run: carry over local data
+}
+let timer = null;
+function persist() {
+  ls.set("bd-state", JSON.stringify(state));
+  if (store.mode !== "cloud") return;
+  clearTimeout(timer);
+  setSync("Saving…");
+  timer = setTimeout(async () => {
+    try { await store.ref.set({ json: JSON.stringify(state), savedAt: Date.now() }); setSync("Saved to your account"); }
+    catch (e) { setSync("Could not save to your account; kept on this device"); }
+  }, 400);
+}
+function commit(fn) { try { fn(); uiMsg = {}; persist(); } catch (e) { uiMsg.err = e.message; } render(); }
+
+// ------------------------------------------------------------------- helpers
+const badge = (t, c) => '<span class="badge b-' + esc(c || t) + '">' + esc(t) + "</span>";
+const meter = (p) => '<div class="meter"><i style="width:' + Math.max(0, Math.min(100, p)) + '%"></i></div>';
+const notes = (l) => (l.length ? l.map((i) => '<div class="note ' + esc(i.level) + '"><b>' + esc(i.title) + "</b>" + esc(i.detail) + "</div>").join("") : '<div class="empty">Nothing to do right now.</div>');
+const field = (id, label, val, type) => '<div><label for="' + id + '">' + label + '</label><input id="' + id + '" type="' + (type || "text") + '"' + (type === "number" ? ' inputmode="decimal" step="any"' : "") + ' value="' + esc(val == null ? "" : val) + '"></div>';
+const v = (id) => { const el = document.getElementById(id); return el ? el.value : ""; };
+const err = () => (uiMsg.err ? '<div class="err" role="alert">' + esc(uiMsg.err) + "</div>" : "");
+const confirmBtn = (key, label, confirmLabel, cls) => '<button class="btn ' + (cls || "") + '" data-act="arm" data-key="' + key + '">' + esc(armed === key ? confirmLabel : label) + "</button>";
+
+// -------------------------------------------------------------------- views
+function dash() {
+  const p = C.pacing(state), f = C.funnel(state), a = C.auditProfile(state.profile, state.jobs), ins = C.insights(state);
+  const fresh = !state.profile.title && !state.jobs.length && !state.proposals.length;
+  const start = fresh ? '<div class="card"><h2>Start here</h2><p class="mute" style="margin:0 0 4px">Add your profile first, then paste a few jobs. Or load clearly marked example data to see how everything works.</p><div class="actions"><button class="btn primary" data-act="tab" data-tab="profile">Set up my profile</button><button class="btn" data-act="demo">Load example data</button></div></div>' : "";
+  return start + '<div class="grid kpis">' +
+    '<div class="card kpi"><div class="l">Earned this month</div><div class="v">' + money(p.earned) + ' <small>/ ' + money(p.revenue_target) + "</small></div>" + meter((100 * p.earned) / p.revenue_target) + "</div>" +
+    '<div class="card kpi"><div class="l">Proposals still needed</div><div class="v">' + p.proposals_needed + '</div><div class="s">≈ ' + p.per_week + "/week for " + p.hires_needed + " hire(s) at " + pct(p.win_rate_used) + " win rate</div></div>" +
+    '<div class="card kpi"><div class="l">Profile score</div><div class="v">' + a.score + ' <small>/ 100</small></div>' + meter(a.score) + "</div>" +
+    '<div class="card kpi"><div class="l">Funnel</div><div class="v">' + f.sent + " → " + f.hired + '</div><div class="s">view ' + pct(f.view_rate) + " · interview " + pct(f.interview_rate) + " · win " + pct(f.win_rate) + "</div></div></div>" +
+    '<div class="grid two"><div class="card"><h2>What to do next</h2>' + notes(ins.filter((i) => i.level === "action").slice(0, 5)) + "</div>" +
+    '<div class="card"><h2>Monthly goal</h2><div class="row">' + field("gt", "Revenue target ($)", p.revenue_target, "number") + field("ga", "Average contract value ($)", p.avg_contract_value, "number") + "</div>" +
+    '<p class="small mute">Proposals sent today mostly pay out in later weeks, so keep volume steady rather than cramming.</p><div class="actions"><button class="btn primary" data-act="goal">Save goal</button></div>' +
+    '<h3 style="margin-top:20px">Log earnings</h3><div class="row">' + field("ea", "Amount ($)", "", "number") + field("ed", "Date", C.ymd(new Date()), "date") + field("en", "Note", "") + '</div><div class="actions"><button class="btn" data-act="earn">Add earning</button></div>' + err() + "</div></div>";
+}
+
+function jobDetail(j) {
+  const d = j.fit, props = state.proposals.filter((p) => p.job_id === j.id && p.status === "draft"), pr = props[props.length - 1];
+  let h = '<div class="card"><h2>' + esc(j.title) + "</h2><div style=\"margin:8px 0\">" + badge(d.decision) + ' <span class="fig">' + d.score + "/100</span></div>";
+  if (d.flags.length) h += '<div class="flag">' + d.flags.map(esc).join("<br>") + "</div>";
+  h += '<div class="small mute mono">' + Object.entries(d.parts).map(([k, x]) => k + " " + x).join(" · ") + "</div>";
+  h += d.reasons.map((r) => '<div class="small">• ' + esc(r) + "</div>").join("");
+  h += '<p class="small" style="white-space:pre-wrap">' + esc(j.description.slice(0, 700)) + (j.description.length > 700 ? "…" : "") + "</p>";
+  h += '<div class="actions">';
+  if (!d.flags.length) {
+    h += '<button class="btn primary" data-act="draft" data-id="' + j.id + '" data-src="' + (sampleOK ? "claude" : "template") + '"' + (drafting ? " disabled" : "") + ">" + (drafting ? "Drafting…" : sampleOK ? "Draft with Claude" : "Draft proposal") + "</button>";
+    if (sampleOK) h += '<button class="btn" data-act="draft" data-id="' + j.id + '" data-src="template"' + (drafting ? " disabled" : "") + ">Quick template</button>";
+  }
+  h += confirmBtn("del" + j.id, "Delete job", "Tap again to delete", "danger sm") + "</div>" + err();
+  if (pr) {
+    h += '<h3 style="margin-top:20px">Draft <span class="pill">' + esc(pr.variant) + '</span><span class="pill">' + esc(pr.source) + "</span></h3>" +
+      '<label for="pb" class="sr">Proposal text</label><textarea id="pb" data-field="body" data-pid="' + pr.id + '" style="min-height:220px">' + esc(pr.body) + "</textarea>" +
+      '<p class="small mute">Replace every [ADD: …] with something true. Then copy it into Upwork and send it yourself.</p>' +
+      '<div class="row">' + field("pcs", "Connects spent", j.connects_cost, "number") + field("pbid", "Your bid ($)", "", "number") + '</div>' +
+      '<div class="actions"><button class="btn" data-act="copy">Copy</button><button class="btn primary" data-act="sent" data-pid="' + pr.id + '">' + (armed === "sent" + pr.id ? "Still has [ADD: …]. Mark sent anyway" : "I sent it on Upwork") + "</button></div>";
+  }
+  return h + "</div>";
+}
+function jobs() {
+  const list = state.jobs.slice().sort((a, b) => b.fit.score - a.fit.score || b.id - a.id);
+  if (selJob != null && !state.jobs.some((j) => j.id === selJob)) selJob = null;
+  const open = addOpen === null ? !state.jobs.length : addOpen;
+  let add = '<div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><h2 style="margin:0">Add a job</h2><button class="btn sm" data-act="toggleadd">' + (open ? "Hide" : "Add a job") + "</button></div>";
+  if (open) {
+    add += '<p class="small mute">On Upwork, open a job, select the whole page and copy it. Paste it here, then check the parsed fields before saving. Missing client details lower confidence.</p>' +
+      '<label for="jt">Job post text</label><textarea id="jt" placeholder="Paste the job post…"></textarea><div class="actions"><button class="btn primary" data-act="parse">Parse</button><button class="btn" data-act="manual">Enter by hand</button></div>';
+    if (parsed) {
+      const p = parsed;
+      add += '<div style="margin-top:12px"><div class="row">' + field("f_title", "Title", p.title) + '<div><label for="f_bt">Type</label><select id="f_bt"><option' + (p.budget_type === "hourly" ? " selected" : "") + ">hourly</option><option" + (p.budget_type === "fixed" ? " selected" : "") + ">fixed</option></select></div>" +
+        field("f_bmin", "Budget min", p.budget_min, "number") + field("f_bmax", "Budget max", p.budget_max, "number") + "</div>" +
+        '<div class="row">' + field("f_skills", "Skills (comma separated)", (p.skills || []).join(", ")) + field("f_spend", "Client total spent ($)", p.client_spend, "number") + field("f_hr", "Hire rate %", p.client_hire_rate, "number") + field("f_rt", "Client rating", p.client_rating, "number") +
+        '<div><label for="f_v">Payment verified</label><select id="f_v"><option value="">unknown</option><option value="1"' + (p.client_verified === 1 ? " selected" : "") + '>yes</option><option value="0"' + (p.client_verified === 0 ? " selected" : "") + ">no</option></select></div>" +
+        field("f_pc", "Proposals so far", p.proposals_count, "number") + field("f_cc", "Connects cost", p.connects_cost, "number") + "</div>" +
+        '<label for="f_desc">Description</label><textarea id="f_desc">' + esc(p.description) + '</textarea><div class="actions"><button class="btn primary" data-act="savejob">Save and score</button></div>' + err() + "</div>";
+    } else add += err();
+  }
+  add += "</div>";
+  const rows = list.length ? list.map((j) => '<button class="job" data-act="seljob" data-id="' + j.id + '"' + (j.id === selJob ? ' aria-current="true"' : "") + '><div class="sc">' + j.fit.score + "<small>" + badge(j.fit.decision) + '</small></div><div><div class="t">' + esc(j.title) + '</div><div class="m">' +
+    (j.budget_max ? (j.budget_type === "hourly" ? "$" + (j.budget_min == null ? "" : j.budget_min + "–") + j.budget_max + "/hr" : money(j.budget_max)) : "no budget") + " · " + (j.client_verified === 1 ? "payment verified" : j.client_verified === 0 ? "unverified" : "client unknown") + (j.proposals_count != null ? " · " + j.proposals_count + " proposals" : "") + "</div>" +
+    (j.fit.flags.length ? '<div class="small" style="color:var(--bad)">Flag: ' + esc(j.fit.flags[0]) + "</div>" : "") + "</div></button>").join("") : '<div class="empty">No jobs yet. Paste one above.</div>';
+  const sel = state.jobs.find((j) => j.id === selJob);
+  return add + '<div class="grid two"><div class="card"><h2>Saved jobs, best fit first</h2>' + rows + "</div><div>" + (sel ? jobDetail(sel) : '<div class="card empty">Pick a job to see its score breakdown and write a proposal.</div>') + "</div></div>";
+}
+
+function pipe() {
+  const ps = state.proposals.slice().reverse(), title = (id) => (state.jobs.find((j) => j.id === id) || {}).title || "(deleted job)";
+  const rows = ps.length ? '<div class="tablewrap"><table><thead><tr><th>Job</th><th>Variant</th><th>Connects</th><th>Status</th></tr></thead><tbody>' + ps.map((p) => "<tr><td>" + esc(title(p.job_id)) + '<div class="small mute">' + (p.sent_at ? "sent " + esc(p.sent_at.slice(0, 10)) : "not sent") + "</div></td><td>" + esc(p.variant) + '</td><td class="mono">' + p.connects + '</td><td><select data-act="status" data-pid="' + p.id + '" aria-label="Status">' + C.STATUSES.map((s) => "<option" + (s === p.status ? " selected" : "") + ">" + s + "</option>").join("") + "</select></td></tr>").join("") + "</tbody></table></div>" : '<div class="empty">No proposals yet. Draft one from the Jobs tab.</div>';
+  const en = state.earnings.slice().sort((a, b) => b.date.localeCompare(a.date));
+  return '<div class="card"><h2>Proposals</h2>' + rows + err() + '<p class="small mute">Update the status as clients respond on Upwork. That is what lets Insights learn what works for you. A lost job keeps the stage it reached.</p></div>' +
+    '<div class="card"><h2>Earnings</h2>' + (en.length ? '<div class="tablewrap"><table><tbody>' + en.map((e) => '<tr><td class="mono">' + esc(e.date) + '</td><td class="mono">' + money(e.amount) + "</td><td>" + esc(e.note) + "</td></tr>").join("") + "</tbody></table></div>" : '<div class="empty">Nothing logged yet. Add earnings on the Dashboard.</div>') + "</div>";
+}
+
+function profile() {
+  const p = state.profile, a = C.auditProfile(p, state.jobs), ta = (id, l, val, h) => '<label for="' + id + '">' + l + '</label><textarea id="' + id + '" style="min-height:' + (h || 70) + 'px">' + esc(val) + "</textarea>";
+  return '<div class="grid two"><div class="card"><h2>Your profile</h2><p class="small mute" style="margin:0">Paste from your Upwork profile. Proof points must be true: drafts use only these.</p>' +
+    field("p_title", "Title", p.title) + ta("p_overview", "Overview", p.overview, 180) + field("p_niche", "Niche: who you help and with what", p.niche) +
+    ta("p_skills", "Skills (comma separated)", p.skills.join(", ")) + ta("p_proof", "Proof points, one per line", p.proof_points.join("\n"), 90) +
+    '<div class="row">' + field("p_rate", "Hourly rate ($)", p.hourly_rate, "number") + field("p_min", "Min fixed budget ($)", p.min_fixed_budget, "number") + field("p_port", "Portfolio items", p.portfolio_count, "number") + "</div>" +
+    field("p_note", "What did you change? (for your history)", "") + '<div class="actions"><button class="btn primary" data-act="saveprofile">Save profile</button></div>' + err() + "</div>" +
+    "<div><div class=\"card\"><h2>Audit: <span class=\"fig\">" + a.score + "/100</span></h2>" + meter(a.score) + '<div style="margin-top:8px">' + a.checks.map((c) => '<div class="check">' + badge(c.status) + "<div>" + esc(c.label) + (c.advice ? '<div class="small mute">' + esc(c.advice) + "</div>" : "") + '</div><div class="mono mute">' + c.points + "/" + c.max + "</div></div>").join("") + "</div></div>" +
+    '<div class="card" style="margin-top:16px"><h2>Change history</h2>' + (state.versions.length ? state.versions.slice().reverse().map((x) => '<div class="small"><b class="mono">v' + x.id + "</b> · " + esc(x.ts.slice(0, 10)) + " · " + esc(x.note) + "</div>").join("") : '<div class="small mute">No saved versions yet.</div>') +
+    '<p class="small mute">Change one thing at a time. Each proposal is tagged with the profile version live when you sent it, so Insights can compare results.</p></div>' +
+    '<div class="card" style="margin-top:16px"><h2>Backup and reset</h2><p class="small mute" style="margin:0 0 8px">Your data is kept ' + (store.mode === "cloud" ? "in your account" : "in this browser only") + '. Copy a backup now and then.</p>' +
+    '<div class="actions"><button class="btn" data-act="export">Show backup</button>' + confirmBtn("reset", "Erase everything", "Tap again to erase", "danger") + "</div>" +
+    (uiMsg.backup ? '<label for="bk">Backup (copy this, or paste one here and restore)</label><textarea id="bk" style="min-height:120px">' + esc(uiMsg.backup) + '</textarea><div class="actions"><button class="btn" data-act="copybk">Copy</button><button class="btn" data-act="restore">Restore from this box</button></div>' : "") + "</div></div></div>";
+}
+
+function insightsView() {
+  const f = C.funnel(state), vr = C.byVariant(state), vs = C.byVersion(state);
+  const head = "<thead><tr><th></th><th>Sent</th><th>Viewed</th><th>Interview</th><th>Hired</th><th>Connects / hire</th></tr></thead>";
+  const row = (n, s) => "<tr><td>" + esc(n) + '</td><td class="mono">' + s.sent + '</td><td class="mono">' + pct(s.view_rate) + '</td><td class="mono">' + pct(s.interview_rate) + '</td><td class="mono">' + pct(s.win_rate) + '</td><td class="mono">' + (s.connects_per_hire == null ? "–" : s.connects_per_hire) + "</td></tr>";
+  const tbl = (rows) => '<div class="tablewrap"><table>' + head + "<tbody>" + rows + "</tbody></table></div>";
+  return '<div class="grid two"><div class="card"><h2>Recommendations</h2>' + notes(C.insights(state)) + "</div><div class=\"grid\"><div class=\"card\"><h2>Overall funnel</h2>" + tbl(row("All", f)) + "</div>" +
+    '<div class="card"><h2>Proposal variants (A/B)</h2>' + (Object.keys(vr).length ? tbl(Object.entries(vr).map(([k, s]) => row(k, s)).join("")) : '<div class="empty">No data yet.</div>') + "</div>" +
+    '<div class="card"><h2>By profile version</h2>' + (vs.length ? tbl(vs.map((s) => row("v" + s.version + " " + s.note, s)).join("")) : '<div class="empty">No data yet.</div>') + '<p class="small mute">Compare only versions with 10+ proposals each. Fewer than that is noise.</p></div></div></div>';
+}
+
+// ------------------------------------------------------------------- render
+function render() {
+  $("#nav").innerHTML = TABS.map(([k, l]) => '<button role="tab" aria-selected="' + (k === tab) + '" data-act="tab" data-tab="' + k + '">' + l + "</button>").join("");
+  const view = $("#view");
+  if (!loaded) { view.innerHTML = '<div class="splash">Loading your data…</div>'; return; }
+  const keep = document.activeElement && document.activeElement.id;
+  view.innerHTML = { dash, jobs, pipe, profile, insights: insightsView }[tab]();
+  if (keep && document.getElementById(keep) && document.getElementById(keep).tagName !== "BUTTON") document.getElementById(keep).focus();
+}
+
+async function doDraft(jobId, src) {
+  const j = state.jobs.find((x) => x.id === jobId);
+  if (!j || drafting) return;
+  const counts = {};
+  state.proposals.forEach((p) => (counts[p.variant] = (counts[p.variant] || 0) + 1));
+  const variant = C.pickVariant(counts);
+  drafting = true; uiMsg = {}; render();
+  let text = "", source = "template";
+  if (src === "claude") {
+    try {
+      const sample = await useCap("sample");
+      if (!sample) throw new Error("Claude drafting is not available here.");
+      const r = await sample(C.buildDraftPrompt(state.profile, j, variant), { cache: false });
+      text = (r.text || "").trim();
+      if (text) source = "claude";
+    } catch (e) { uiMsg.err = "Claude couldn't draft this one (" + (e && e.message ? e.message : "unavailable") + "). Used the template instead."; }
+  }
+  if (!text) text = C.templateDraft(state.profile, j, variant);
+  drafting = false;
+  const m = uiMsg.err;
+  C.createProposal(state, jobId, text, variant, source);
+  persist(); uiMsg = m ? { err: m } : {}; render();
+}
+
+// ------------------------------------------------------------------- events
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-act]");
+  if (!t || t.tagName === "SELECT") return;
+  const act = t.dataset.act, id = Number(t.dataset.id), pid = Number(t.dataset.pid);
+  if (act === "arm") {
+    const key = t.dataset.key;
+    if (armed !== key) { armed = key; render(); return; }
+    armed = null;
+    if (key === "reset") { commit(() => { state = C.emptyState(); selJob = null; parsed = null; }); return; }
+    if (key.indexOf("del") === 0) { commit(() => { C.deleteJob(state, Number(key.slice(3))); selJob = null; }); return; }
+  }
+  const wasArmed = armed;
+  armed = act === "arm" ? armed : null;
+  if (act === "tab") { tab = t.dataset.tab; ls.set("bd-tab", tab); uiMsg = {}; render(); window.scrollTo(0, 0); }
+  else if (act === "demo") commit(() => { state = C.demoState(); });
+  else if (act === "goal") commit(() => C.setGoal(state, C.monthOf(), v("gt"), v("ga")));
+  else if (act === "earn") commit(() => C.addEarning(state, v("ea"), v("ed"), v("en")));
+  else if (act === "toggleadd") { addOpen = !(addOpen === null ? !state.jobs.length : addOpen); render(); }
+  else if (act === "parse") { const txt = v("jt"); if (!txt.trim()) { uiMsg.err = "Paste the job post text first."; } else { parsed = C.parseJobText(txt); uiMsg = {}; } render(); }
+  else if (act === "manual") { parsed = { title: "", description: "", skills: [], budget_type: "hourly" }; render(); }
+  else if (act === "savejob") commit(() => {
+    const j = C.addJob(state, { title: v("f_title"), description: v("f_desc"), budget_type: v("f_bt"), budget_min: v("f_bmin"), budget_max: v("f_bmax"), skills: v("f_skills"), client_spend: v("f_spend"), client_hire_rate: v("f_hr"), client_rating: v("f_rt"), client_verified: v("f_v"), proposals_count: v("f_pc"), connects_cost: v("f_cc") });
+    selJob = j.id; parsed = null; addOpen = false;
+  });
+  else if (act === "seljob") { selJob = id; uiMsg = {}; render(); const d = $("#pb") || $(".grid.two > div:last-child"); if (window.innerWidth < 700 && d) d.scrollIntoView({ block: "start" }); }
+  else if (act === "draft") doDraft(id, t.dataset.src);
+  else if (act === "copy") { const ta = $("#pb"); if (ta) { const done = () => { t.textContent = "Copied ✓"; }; try { navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); t.textContent = "Press and hold to copy"; }); } catch (x) { ta.select(); t.textContent = "Press and hold to copy"; } } }
+  else if (act === "sent") {
+    const body = ($("#pb") || {}).value || "", key = "sent" + pid;
+    if (/\[ADD:/.test(body) && wasArmed !== key) { armed = key; render(); return; }
+    armed = null;
+    commit(() => { C.updateProposal(state, pid, { body, connects: v("pcs") || 0, bid: v("pbid"), status: "sent" }); tab = "pipe"; ls.set("bd-tab", tab); });
+  }
+  else if (act === "saveprofile") commit(() => { C.saveProfile(state, { title: v("p_title"), overview: v("p_overview"), niche: v("p_niche"), skills: v("p_skills"), proof_points: v("p_proof"), hourly_rate: v("p_rate"), min_fixed_budget: v("p_min"), portfolio_count: v("p_port") }, v("p_note")); });
+  else if (act === "export") { uiMsg.backup = JSON.stringify(state); render(); }
+  else if (act === "copybk") { const ta = $("#bk"); if (ta) { ta.select(); try { navigator.clipboard.writeText(ta.value).then(() => { t.textContent = "Copied ✓"; }, () => {}); } catch (x) {} } }
+  else if (act === "restore") commit(() => { const s = JSON.parse(v("bk")); if (!s || s.v !== 1 || !s.profile || !Array.isArray(s.jobs) || !Array.isArray(s.proposals)) throw new Error("That doesn't look like a Bid Desk backup."); state = s; C.rescoreAll(state); });
+});
+document.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.dataset && t.dataset.act === "status") commit(() => C.updateProposal(state, Number(t.dataset.pid), { status: t.value }));
+  else if (t.dataset && t.dataset.field === "body") { const p = state.proposals.find((x) => x.id === Number(t.dataset.pid)); if (p) { p.body = t.value; persist(); } }
+});
+
+render();
+load().then(render, () => { loaded = true; render(); });
+})();
+</script>
